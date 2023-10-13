@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NinjaUtils", "NinjaUtils\NinjaUtils.csproj", "{F384AF68-3E58-4FA3-898E-E31950BB0653}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F384AF68-3E58-4FA3-898E-E31950BB0653}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F384AF68-3E58-4FA3-898E-E31950BB0653}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F384AF68-3E58-4FA3-898E-E31950BB0653}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F384AF68-3E58-4FA3-898E-E31950BB0653}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DA2803DF-A4C8-48A5-B43F-F483427B50D3}
+	EndGlobalSection
+EndGlobal
