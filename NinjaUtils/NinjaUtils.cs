@@ -92,6 +92,10 @@ namespace NinjaUtils
         public bool isMenuing = false;
         public bool isPaused = false;
 
+        public bool timescaleEnabled = false;
+        public float timescale = 0.01f;
+        public String timescaleS = "";
+
         void NinjaUtilsGUI(int windowID)
         {
             GUIStyle colorWhite = new GUIStyle();
@@ -314,6 +318,20 @@ namespace NinjaUtils
 
             if (!int.TryParse(fpsLimitS, out _)) { fpsLimitS = fpsLimit.ToString(); }
             fpsLimit = int.Parse(fpsLimitS);
+
+
+
+            linePos = linePos + (elementSizeH * 2);
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"Toggle Timescale ({(timescaleEnabled ? "<color=green>On</color>" : "<color=red>Off</color>")}) (T)") && (isMenuing || isPaused))
+            {
+                timescaleEnabled = !timescaleEnabled;
+            }
+
+            linePos = linePos + (elementSizeH);
+            timescaleS = GUI.TextArea(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), timescaleS);
+
+            if (!float.TryParse(timescaleS, out _)) { timescaleS = timescale.ToString(); }
+            timescale = float.Parse(timescaleS);
         }
 
         void DrawText(float x, float y, float w, float h, string text, GUIStyle textColor, GUIStyle shadowColor = null)
@@ -387,6 +405,9 @@ namespace NinjaUtils
 
         public void Update()
         {
+            if (timescaleEnabled && Time.timeScale != timescale) { Time.timeScale = timescale; }
+            else if (Time.timeScale != 1f) { Time.timeScale = 1f; }
+
             if (Core.Instance != null)
             {
                 corePuased = Core.Instance.IsCorePaused;
@@ -711,6 +732,7 @@ namespace NinjaUtils
             if (UnityEngine.Input.GetKeyDown(KeyCode.L)) { LimitFPS(); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.K)) { EndWanted(); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.O)) { SetStorage(player, savedStorage); }
+            if (UnityEngine.Input.GetKeyDown(KeyCode.T)) { timescaleEnabled = !timescaleEnabled; }
         }
 
         // ---------- FUNCTIONS ----------
