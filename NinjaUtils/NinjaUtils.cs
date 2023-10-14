@@ -84,6 +84,11 @@ namespace NinjaUtils
         WantedManager wantedManager;
         bool isWanted = false;
 
+        public WallrunLineAbility wallrunLineAbility;
+        public float storageSpeed = 0f;
+        public float savedStorage = 0f;
+        public String savedStorageS = "";
+
         void NinjaUtilsGUI(int windowID)
         {
             GUIStyle colorWhite = new GUIStyle();
@@ -110,6 +115,9 @@ namespace NinjaUtils
 
             linePos = linePos + (elementSizeH / 2) + 2;
             DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "Highest Speed: " + (int)playerSpeedMax, colorWhite, colorBlack);
+
+            linePos = linePos + (elementSizeH / 2) + 2;
+            DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "Storage Speed: " + (int)storageSpeed, colorWhite, colorBlack);
 
             linePos = linePos + (elementSizeH + lineSpacing);
             if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), "Fill Boost (R)") && isMenuing)
@@ -164,6 +172,23 @@ namespace NinjaUtils
             savedVel.z = float.Parse(saveVelZ);
 
             linePos = linePos + (elementSizeH + lineSpacing);
+            DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "Saved Storage", colorWhite, colorBlack);
+
+            linePos = linePos + (elementSizeH);
+
+            savedStorageS = GUI.TextArea(new Rect((winRect.width/2) - (((winRect.width / 3) - (sidePadding * buttonSpacing))/2), linePos, (winRect.width / 3) - (sidePadding * buttonSpacing), elementSizeH), savedStorageS);
+
+            if (!float.TryParse(savedStorageS, out _)) { savedStorageS = savedStorage.ToString(); }
+
+            savedStorage = float.Parse(savedStorageS);
+
+            linePos = linePos + (elementSizeH + lineSpacing);
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), "Set Storage Speed (O)") && isMenuing)
+            {
+                SetStorage(GetPlayer(), savedStorage);
+            }
+
+            linePos = linePos + (elementSizeH + lineSpacing);
             if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"Toggle Saving Velocity ({(shouldSaveVel ? "<color=green>On</color>" : "<color=red>Off</color>")})") && isMenuing)
             {
                 shouldSaveVel = !shouldSaveVel;
@@ -172,12 +197,12 @@ namespace NinjaUtils
             linePos = linePos + (elementSizeH + lineSpacing);
             if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Save Position (H)") && isMenuing)
             {
-                SaveLoad(true);
+                SaveLoad(GetPlayer(), true);
             }
 
             if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Load Position (J)") && isMenuing)
             {
-                SaveLoad(false);
+                SaveLoad(GetPlayer(), false);
             }
 
             linePos = linePos + (elementSizeH + lineSpacing);
@@ -267,12 +292,12 @@ namespace NinjaUtils
             linePos = linePos + (elementSizeH);
             if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Prev Outfit (,)") && isMenuing)
             {
-                NextOutfit(GetPlayer(), false);
+                NextStyle(GetPlayer(), false);
             }
 
             if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Next Outfit (.)") && isMenuing)
             {
-                NextOutfit(GetPlayer(), true);
+                NextStyle(GetPlayer(), true);
             }
 
             linePos = linePos + (elementSizeH * 2);
@@ -378,8 +403,6 @@ namespace NinjaUtils
             }
 
             Player player = GetPlayer();
-            
-            //typeof(WallrunLineAbility).GetField("character", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(player)
 
             if (player != null)
             {
@@ -395,12 +418,24 @@ namespace NinjaUtils
                     player.SwitchToEquippedMovestyle(true);
                 }
 
+                wallrunLineAbility = (WallrunLineAbility)typeof(Player).GetField("wallrunAbility", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(player);
+
+                if (wallrunLineAbility != null)
+                {
+                    storageSpeed = (float)typeof(WallrunLineAbility).GetField("lastSpeed", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(wallrunLineAbility);
+                }
+                else 
+                {
+                    storageSpeed = 0;
+                }
+
                 playerSpeed = player.GetTotalSpeed();
                 if (playerSpeedMax < playerSpeed) { playerSpeedMax = playerSpeed; }
             }
             else
             {
                 if (playerSpeed != 0) { playerSpeed = 0; }
+                if (storageSpeed != 0) { storageSpeed = 0f; }
             }
 
             if (invul)
@@ -645,8 +680,8 @@ namespace NinjaUtils
             if (UnityEngine.Input.GetKeyDown(KeyCode.R)) { FillBoostMax(player); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.N)) { GoToNextSpawn(player); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.M)) { GoToNextDreamSpawn(player); }
-            if (UnityEngine.Input.GetKeyDown(KeyCode.H)) { SaveLoad(true); }
-            if (UnityEngine.Input.GetKeyDown(KeyCode.J)) { SaveLoad(false); }
+            if (UnityEngine.Input.GetKeyDown(KeyCode.H)) { SaveLoad(GetPlayer(), true); }
+            if (UnityEngine.Input.GetKeyDown(KeyCode.J)) { SaveLoad(GetPlayer(), false); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.Alpha1)) { GoToStage(GetBaseModule()); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.Alpha2)) { SelectNextStage(); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.Backslash)) { fly = false; noclip = !noclip; }
@@ -660,6 +695,7 @@ namespace NinjaUtils
             if (UnityEngine.Input.GetKeyDown(KeyCode.Comma)) { NextOutfit(player, false); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.L)) { LimitFPS(); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.K)) { EndWanted(); }
+            if (UnityEngine.Input.GetKeyDown(KeyCode.O)) { SetStorage(player, savedStorage); }
         }
 
         // ---------- FUNCTIONS ----------
@@ -719,22 +755,25 @@ namespace NinjaUtils
             }
         }
 
-        public void SaveLoad(bool save)
+        public void SaveLoad(Player player, bool save)
         {
-            if (GetPlayer() != null)
+            if (player != null)
             {
                 if (save)
                 {
-                    savedPos = GetPlayer().tf.position;
-                    savedAng = GetPlayer().tf.rotation;
+                    savedPos = player.tf.position;
+                    savedAng = player.tf.rotation;
 
                     savePosX = savedPos.x.ToString();
                     savePosY = savedPos.y.ToString();
                     savePosZ = savedPos.z.ToString();
 
+                    savedStorage = storageSpeed;
+                    savedStorageS = savedStorage.ToString();
+
                     if (shouldSaveVel)
                     {
-                        savedVel = GetPlayer().GetPracticalWorldVelocity();
+                        savedVel = player.GetPracticalWorldVelocity();
                         saveVelX = savedVel.x.ToString();
                         saveVelY = savedVel.y.ToString();
                         saveVelZ = savedVel.z.ToString();
@@ -750,7 +789,8 @@ namespace NinjaUtils
                     {
                         WorldHandler.instance.PlaceCurrentPlayerAt(savedPos, savedAng, true);
                     }
-                    GetPlayer().SetVelocity(savedVel);
+                    SetStorage(player, savedStorage);
+                    player.SetVelocity(savedVel);
                 }
             }
         }
@@ -882,5 +922,16 @@ namespace NinjaUtils
                 wantedManager.StopPlayerWantedStatus(true);
             }
         }
+
+
+        public void SetStorage(Player player, float storage)
+        {
+            if (wallrunLineAbility != null && player != null)
+            {
+                FieldInfo lastSpeed = typeof(WallrunLineAbility).GetField("lastSpeed", BindingFlags.Instance | BindingFlags.NonPublic);
+                lastSpeed.SetValue(wallrunLineAbility, storage);
+            }
+        }
+
     }
 }
