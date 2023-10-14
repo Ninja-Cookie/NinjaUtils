@@ -89,6 +89,9 @@ namespace NinjaUtils
         public float savedStorage = 0f;
         public String savedStorageS = "";
 
+        public bool isMenuing = false;
+        public bool isPaused = false;
+
         void NinjaUtilsGUI(int windowID)
         {
             GUIStyle colorWhite = new GUIStyle();
@@ -120,19 +123,19 @@ namespace NinjaUtils
             DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "Storage Speed: " + (int)storageSpeed, colorWhite, colorBlack);
 
             linePos = linePos + (elementSizeH + lineSpacing);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), "Fill Boost (R)") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), "Fill Boost (R)") && (isMenuing || isPaused))
             {
                 FillBoostMax(GetPlayer());
             }
 
             linePos = linePos + (elementSizeH + lineSpacing);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"Toggle Invulnerable ({(invul ? "<color=green>On</color>" : "<color=red>Off</color>")}) (i)") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"Toggle Invulnerable ({(invul ? "<color=green>On</color>" : "<color=red>Off</color>")}) (i)") && (isMenuing || isPaused))
             {
                 invul = !invul;
             }
 
             linePos = linePos + (elementSizeH + lineSpacing);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"End Wanted ({(isWanted ? "<color=red>Wanted</color>" : "<color=green>Safe</color>")}) (K)") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"End Wanted ({(isWanted ? "<color=red>Wanted</color>" : "<color=green>Safe</color>")}) (K)") && (isMenuing || isPaused))
             {
                 EndWanted();
             }
@@ -183,35 +186,35 @@ namespace NinjaUtils
             savedStorage = float.Parse(savedStorageS);
 
             linePos = linePos + (elementSizeH + lineSpacing);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), "Set Storage Speed (O)") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), "Set Storage Speed (O)") && isMenuing || isPaused)
             {
                 SetStorage(GetPlayer(), savedStorage);
             }
 
             linePos = linePos + (elementSizeH + lineSpacing);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"Toggle Saving Velocity ({(shouldSaveVel ? "<color=green>On</color>" : "<color=red>Off</color>")})") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"Toggle Saving Velocity ({(shouldSaveVel ? "<color=green>On</color>" : "<color=red>Off</color>")})") && (isMenuing || isPaused))
             {
                 shouldSaveVel = !shouldSaveVel;
             }
 
             linePos = linePos + (elementSizeH + lineSpacing);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Save Position (H)") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Save Position (H)") && (isMenuing || isPaused))
             {
                 SaveLoad(GetPlayer(), true);
             }
 
-            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Load Position (J)") && isMenuing)
+            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Load Position (J)") && (isMenuing || isPaused))
             {
                 SaveLoad(GetPlayer(), false);
             }
 
             linePos = linePos + (elementSizeH + lineSpacing);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Spawns (N)") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Spawns (N)") && (isMenuing || isPaused))
             {
                 GoToNextSpawn(GetPlayer());
             }
 
-            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Dream Spawns (M)") && isMenuing)
+            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Dream Spawns (M)") && (isMenuing || isPaused))
             {
                 GoToNextDreamSpawn(GetPlayer());
             }
@@ -223,12 +226,12 @@ namespace NinjaUtils
             DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "Selected Stage: " + selectedStage.ToString(), colorWhite, colorBlack);
 
             linePos = linePos + (elementSizeH);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Go To Stage (1)") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), $"Go To Stage {(isPaused ? "<color=red>(Off)</color>" : "")} (1)") && isMenuing)
             {
                 GoToStage(GetBaseModule());
             }
 
-            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Select Stage (2)") && isMenuing)
+            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Select Stage (2)") && (isMenuing || isPaused))
             {
                 SelectNextStage();
             }
@@ -239,13 +242,13 @@ namespace NinjaUtils
             else { DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "State: Normal", colorWhite, colorBlack); }
 
             linePos = linePos + (elementSizeH);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Toggle Noclip (\\)") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Toggle Noclip (\\)") && (isMenuing || isPaused))
             {
                 fly = false;
                 noclip = !noclip;
             }
 
-            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Enable Fly (/)") && isMenuing)
+            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Enable Fly (/)") && (isMenuing || isPaused))
             {
                 noclip = false;
                 fly = !fly;
@@ -268,40 +271,40 @@ namespace NinjaUtils
             DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "Style: " + currentStyleIndex.ToString(), colorWhite, colorBlack);
 
             linePos = linePos + (elementSizeH);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Prev Char ([)") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Prev Char ([)") && (isMenuing || isPaused))
             {
                 NextChar(GetPlayer(), false);
             }
 
-            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Next Char (])") && isMenuing)
+            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Next Char (])") && (isMenuing || isPaused))
             {
                 NextChar(GetPlayer(), true);
             }
 
             linePos = linePos + (elementSizeH);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Prev Style (-)") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Prev Style (-)") && (isMenuing || isPaused))
             {
                 NextStyle(GetPlayer(), false);
             }
 
-            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Next Style (+)") && isMenuing)
+            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Next Style (+)") && (isMenuing || isPaused))
             {
                 NextStyle(GetPlayer(), true);
             }
 
             linePos = linePos + (elementSizeH);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Prev Outfit (,)") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Prev Outfit (,)") && (isMenuing || isPaused))
             {
                 NextStyle(GetPlayer(), false);
             }
 
-            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Next Outfit (.)") && isMenuing)
+            if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Next Outfit (.)") && (isMenuing || isPaused))
             {
                 NextStyle(GetPlayer(), true);
             }
 
             linePos = linePos + (elementSizeH * 2);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"Limit FPS ({(limitFPS ? "<color=green>On</color>" : "<color=red>Off</color>")}) (L)") && isMenuing)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"Limit FPS ({(limitFPS ? "<color=green>On</color>" : "<color=red>Off</color>")}) (L)") && (isMenuing || isPaused))
             {
                 LimitFPS();
             }
@@ -370,7 +373,6 @@ namespace NinjaUtils
         }
 
         // ---------- UPDATE ----------
-        public bool isMenuing = false;
         public Stage currentStage = Stage.NONE;
         public List<Vector3> respawners = new List<Vector3>();
         public List<Vector3> dreamRespawners = new List<Vector3>();
@@ -480,7 +482,7 @@ namespace NinjaUtils
                 }
             }
 
-            if (isMenuing)
+            if (isMenuing && Core.Instance != null)
             {
                 if (corePuased)
                 {
@@ -488,12 +490,25 @@ namespace NinjaUtils
                     {
                         CameraMode cameraMode = (CameraMode)typeof(GameplayCamera).GetField("cameraMode", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(GetGameplayCamera(player, GetBaseModule()));
                         cameraMode.inputEnabled = true;
+                        isMenuing = false;
                     }
-                    isMenuing = false;
                 }
                 else if (!Cursor.visible && GetGameInput() != null && Reptile.Utility.GetIsCurrentSceneStage())
                 {
                     GetGameInput().SetUICursorMode();
+                }
+            }
+
+            if (Core.Instance != null)
+            {
+                if (corePuased && GetBaseModule() != null) 
+                {
+                    if (GetBaseModule().IsInGamePaused) 
+                    { isPaused = true; } else { isPaused = false; }
+                }
+                else if (!corePuased)
+                {
+                    isPaused = false;
                 }
             }
 
@@ -703,7 +718,7 @@ namespace NinjaUtils
         {
             if (gameInput != null && !corePuased && Reptile.Utility.GetIsCurrentSceneStage() && Reptile.Utility.GetCurrentStage() != Stage.NONE)
             {
-                if (!Cursor.visible)
+                if (!Cursor.visible && !Core.Instance.IsCorePaused)
                 {
                     if (gameplayCamera != null)
                     {
