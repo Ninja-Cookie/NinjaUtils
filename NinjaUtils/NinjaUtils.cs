@@ -378,6 +378,8 @@ namespace NinjaUtils
             }
 
             Player player = GetPlayer();
+            
+            //typeof(WallrunLineAbility).GetField("character", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(player)
 
             if (player != null)
             {
