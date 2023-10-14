@@ -938,6 +938,7 @@ namespace NinjaUtils
             }
         }
 
+
         public void SetStorage(Player player, float storage)
         {
             if (wallrunLineAbility != null && player != null)
