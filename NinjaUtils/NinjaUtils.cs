@@ -267,12 +267,12 @@ namespace NinjaUtils
             linePos = linePos + (elementSizeH);
             if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Prev Outfit (,)") && isMenuing)
             {
-                NextStyle(GetPlayer(), false);
+                NextOutfit(GetPlayer(), false);
             }
 
             if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Next Outfit (.)") && isMenuing)
             {
-                NextStyle(GetPlayer(), true);
+                NextOutfit(GetPlayer(), true);
             }
 
             linePos = linePos + (elementSizeH * 2);
