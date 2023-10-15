@@ -93,7 +93,7 @@ namespace NinjaUtils
         public bool isPaused = false;
 
         public bool timescaleEnabled = false;
-        public float timescale = 0.01f;
+        public float timescale = 0.1f;
         public String timescaleS = "";
 
         void NinjaUtilsGUI(int windowID)
@@ -232,7 +232,7 @@ namespace NinjaUtils
             linePos = linePos + (elementSizeH);
             if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), $"Go To Stage {(isPaused ? "<color=red>(Off)</color>" : "")} (1)") && isMenuing)
             {
-                GoToStage(GetBaseModule());
+                GoToStage(loadedBaseModule);
             }
 
             if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Select Stage (2)") && (isMenuing || isPaused))
@@ -346,14 +346,15 @@ namespace NinjaUtils
         }
 
         // ---------- GET ----------
-        public BaseModule GetBaseModule()
-        {
-            if (FindObjectOfType<BaseModule>() != null)
-            {
-                return FindObjectOfType<BaseModule>();
-            }
-            return null;
-        }
+        
+        //public BaseModule loadedBaseModule
+        //{
+            //if (FindObjectOfType<BaseModule>() != null)
+            //{
+            //    return FindObjectOfType<BaseModule>();
+            //}
+            //return null;
+        //}
 
         public GameplayCamera GetGameplayCamera(Player player, BaseModule baseModule)
         {
@@ -370,9 +371,9 @@ namespace NinjaUtils
 
         public GameInput GetGameInput()
         {
-            if (GetBaseModule() != null)
+            if (loadedBaseModule != null)
             {
-                GameInput gameInput = (GameInput)typeof(BaseModule).GetField("gameInput", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(GetBaseModule());
+                GameInput gameInput = (GameInput)typeof(BaseModule).GetField("gameInput", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(loadedBaseModule);
                 if (gameInput != null) { return gameInput; }
             }
             return null;
@@ -402,6 +403,8 @@ namespace NinjaUtils
 
         bool fly = false;
         bool flyOff = true;
+        Player player;
+        BaseModule loadedBaseModule;
 
         public void Update()
         {
@@ -411,6 +414,8 @@ namespace NinjaUtils
             if (Core.Instance != null)
             {
                 corePuased = Core.Instance.IsCorePaused;
+
+                if (loadedBaseModule == null) { loadedBaseModule = FindObjectOfType<BaseModule>(); }
 
                 if (limitFPS)
                 {
@@ -425,8 +430,11 @@ namespace NinjaUtils
                 corePuased = true;
             }
 
-            Player player = GetPlayer();
-
+            if (WorldHandler.instance != null)
+            {
+                if (player != WorldHandler.instance.GetCurrentPlayer()) { player = WorldHandler.instance.GetCurrentPlayer(); }
+            }
+            
             if (player != null)
             {
                 if ((Characters)typeof(Player).GetField("character", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(player) != currentCharIndex)
@@ -476,9 +484,9 @@ namespace NinjaUtils
             wantedManager = WantedManager.instance;
             if (wantedManager != null) { isWanted = wantedManager.Wanted; } else { isWanted = false; }
 
-            if (currentStage != Reptile.Utility.GetCurrentStage() && (Reptile.Utility.GetIsCurrentSceneStage() && WorldHandler.instance.GetCurrentPlayer() != null && GetBaseModule() != null))
+            if (currentStage != Reptile.Utility.GetCurrentStage() && (Reptile.Utility.GetIsCurrentSceneStage() && WorldHandler.instance.GetCurrentPlayer() != null && loadedBaseModule != null))
             {
-                if (!GetBaseModule().IsLoading)
+                if (!loadedBaseModule.IsLoading)
                 {
                     currentStage = Reptile.Utility.GetCurrentStage();
 
@@ -507,9 +515,9 @@ namespace NinjaUtils
             {
                 if (corePuased)
                 {
-                    if (GetGameplayCamera(player, GetBaseModule()) != null)
+                    if (GetGameplayCamera(player, loadedBaseModule) != null)
                     {
-                        CameraMode cameraMode = (CameraMode)typeof(GameplayCamera).GetField("cameraMode", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(GetGameplayCamera(player, GetBaseModule()));
+                        CameraMode cameraMode = (CameraMode)typeof(GameplayCamera).GetField("cameraMode", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(GetGameplayCamera(player, loadedBaseModule));
                         cameraMode.inputEnabled = true;
                         isMenuing = false;
                     }
@@ -522,12 +530,12 @@ namespace NinjaUtils
 
             if (Core.Instance != null)
             {
-                if (corePuased && GetBaseModule() != null) 
+                if (loadedBaseModule != null && corePuased)
                 {
-                    if (GetBaseModule().IsInGamePaused) 
+                    if (loadedBaseModule.IsInGamePaused) 
                     { isPaused = true; } else { isPaused = false; }
                 }
-                else if (!corePuased)
+                else
                 {
                     isPaused = false;
                 }
@@ -712,13 +720,13 @@ namespace NinjaUtils
                 }
             }
 
-            if (UnityEngine.Input.GetKeyDown(KeyCode.P)) { ToggleCursor(GetGameInput(), GetGameplayCamera(player, GetBaseModule())); }
+            if (UnityEngine.Input.GetKeyDown(KeyCode.P)) { ToggleCursor(GetGameInput(), GetGameplayCamera(player, loadedBaseModule)); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.R)) { FillBoostMax(player); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.N)) { GoToNextSpawn(player); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.M)) { GoToNextDreamSpawn(player); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.H)) { SaveLoad(GetPlayer(), true); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.J)) { SaveLoad(GetPlayer(), false); }
-            if (UnityEngine.Input.GetKeyDown(KeyCode.Alpha1)) { GoToStage(GetBaseModule()); }
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Alpha1)) { GoToStage(loadedBaseModule); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.Alpha2)) { SelectNextStage(); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.Backslash)) { fly = false; noclip = !noclip; }
             if (UnityEngine.Input.GetKeyDown(KeyCode.Slash)) { noclip = false; fly = !fly; }
