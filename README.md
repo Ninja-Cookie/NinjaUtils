@@ -13,3 +13,5 @@ New things include:
 - Toggle Mouse.
 
 This was created from scratch, with mild reference to [SpeedUtils](https://github.com/realJomoko/SpeedUtils/) on how some things are done, so the code and structure aint as pretty, but it works.
+
+TriggerTools.cs is taken directly from [SpeedUtils](https://github.com/realJomoko/SpeedUtils/) (Not including some edits), all credit goes to that and its creator(s).
