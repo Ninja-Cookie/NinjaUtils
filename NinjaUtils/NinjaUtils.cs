@@ -8,7 +8,7 @@ namespace NinjaUtils
     {
         public const string pluginGuid = "ninjacookie.brc.ninjautils";
         public const string pluginName = "NinjaUtils";
-        public const string pluginVersion = "0.0.1";
+        public const string pluginVersion = "0.0.2";
 
         private GameObject _mod;
         private NinjaGUI _ninjaGUI;
