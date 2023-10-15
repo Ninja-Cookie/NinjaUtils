@@ -1,4 +1,5 @@
 ﻿using Reptile;
+using Rewired;
 using System.Reflection;
 using UnityEngine;
 
@@ -151,109 +152,28 @@ namespace NinjaUtils
                     ninjaCalls.isPaused = false;
                 }
             }
+        }
 
-            if (ninjaCalls.noclip)
+        public void FixedUpdate() 
+        {
+            if (ninjaCalls.fly || ninjaCalls.noclip)
             {
                 if (ninjaCalls.player != null)
                 {
-                    ninjaCalls.fly = false;
-                    ninjaCalls.flyOff = true;
-                    ninjaCalls.noclipOff = false;
-
-                    Camera.main.farClipPlane = 20000f;
-
-                    FieldInfo userInputEnabled = typeof(Player).GetField("userInputEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
-                    userInputEnabled.SetValue(ninjaCalls.player, false);
-
-                    Transform cameraMode = (Transform)typeof(WorldHandler).GetField("currentCameraTransform", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(WorldHandler.instance);
-
-                    Vector3 velocity = Vector3.zero;
-
-                    float deadzone = 0.01f;
-
-                    float finalNoclipSpeedForward = ninjaCalls.noclipSpeed;
-                    float finalNoclipSpeedRight = ninjaCalls.noclipSpeed;
-
-                    if (UnityEngine.Input.GetAxis("Vertical") > deadzone) { finalNoclipSpeedForward = finalNoclipSpeedForward * UnityEngine.Input.GetAxis("Vertical"); }
-                    else if (UnityEngine.Input.GetAxis("Vertical") < -deadzone) { finalNoclipSpeedForward = finalNoclipSpeedForward * (UnityEngine.Input.GetAxis("Vertical") * -1); }
-
-                    if (UnityEngine.Input.GetAxis("Horizontal") > deadzone) { finalNoclipSpeedRight = finalNoclipSpeedRight * UnityEngine.Input.GetAxis("Horizontal"); }
-                    else if (UnityEngine.Input.GetAxis("Horizontal") < -deadzone) { finalNoclipSpeedRight = finalNoclipSpeedRight * (UnityEngine.Input.GetAxis("Horizontal") * -1); }
-
-                    Vector3 forward = (finalNoclipSpeedForward * Time.deltaTime) * cameraMode.forward;
-                    Vector3 right = (finalNoclipSpeedRight * Time.deltaTime) * cameraMode.right;
-                    forward.y = 0f;
-                    right.y = 0f;
-
-                    ninjaCalls.player.CompletelyStop();
-                    if (UnityEngine.Input.GetKey(KeyCode.W) || UnityEngine.Input.GetAxis("Vertical") > deadzone)
-                    {
-                        ninjaCalls.player.motor.rotation = cameraMode.rotation;
-                        velocity += forward;
-                    }
-                    else if (UnityEngine.Input.GetKey(KeyCode.S) || UnityEngine.Input.GetAxis("Vertical") < -deadzone)
-                    {
-                        ninjaCalls.player.motor.rotation = cameraMode.rotation;
-                        velocity += forward * -1;
-                    }
-
-                    if (UnityEngine.Input.GetKey(KeyCode.A) || UnityEngine.Input.GetAxis("Horizontal") < -deadzone)
-                    {
-                        ninjaCalls.player.motor.rotation = cameraMode.rotation;
-                        velocity += right * -1;
-                    }
-                    else if (UnityEngine.Input.GetKey(KeyCode.D) || UnityEngine.Input.GetAxis("Horizontal") > deadzone)
-                    {
-                        ninjaCalls.player.motor.rotation = cameraMode.rotation;
-                        velocity += right;
-                    }
-
-                    if (UnityEngine.Input.GetKey(KeyCode.Space) || UnityEngine.Input.GetKey(KeyCode.JoystickButton0))
-                    {
-                        velocity.y = (25f * Time.deltaTime);
-                    }
-                    else if (UnityEngine.Input.GetKey(KeyCode.LeftControl) || UnityEngine.Input.GetKey(KeyCode.JoystickButton1))
-                    {
-                        velocity.y = (25f * Time.deltaTime) * -1;
-                    }
-                    ninjaCalls.player.transform.Translate(velocity, Space.World);
-                    ninjaCalls.player.SetVelocity(new Vector3(ninjaCalls.player.GetPracticalWorldVelocity().x, 0.24f, ninjaCalls.player.GetPracticalWorldVelocity().z));
-                    ninjaCalls.noclipPos = ninjaCalls.player.transform.position;
-                }
-                else
-                {
-                    ninjaCalls.noclip = false;
-                }
-            }
-            else
-            {
-                if (ninjaCalls.player != null)
-                {
-                    ninjaCalls.noclipPos = ninjaCalls.player.transform.position;
-                }
-
-                if (!ninjaCalls.noclipOff && ninjaCalls.player != null)
-                {
-                    if (!ninjaCalls.fly)
-                    {
-                        Camera.main.farClipPlane = 1000f;
-                        FieldInfo userInputEnabled = typeof(Player).GetField("userInputEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
-                        userInputEnabled.SetValue(ninjaCalls.player, true);
-                        ninjaCalls.player.CompletelyStop();
-                    }
-                    ninjaCalls.noclipOff = true;
-                }
-            }
-
-            if (ninjaCalls.fly)
-            {
-                if (ninjaCalls.player != null)
-                {
-                    ninjaCalls.noclip = false;
-                    ninjaCalls.noclipOff = true;
                     ninjaCalls.flyOff = false;
 
-                    Camera.main.farClipPlane = 20000f;
+                    if (ninjaCalls.noclip)
+                    {
+                        ninjaCalls.player.GetComponent<Collider>().enabled = false;
+                        ninjaCalls.player.interactionCollider.enabled = false;
+                    }
+                    else 
+                    {
+                        ninjaCalls.player.GetComponent<Collider>().enabled = true;
+                        ninjaCalls.player.interactionCollider.enabled = true;
+                    }
+
+                    if (Camera.main != null) { Camera.main.farClipPlane = 20000f; }
 
                     FieldInfo userInputEnabled = typeof(Player).GetField("userInputEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
                     userInputEnabled.SetValue(ninjaCalls.player, false);
@@ -264,8 +184,19 @@ namespace NinjaUtils
 
                     float deadzone = 0.01f;
 
-                    float finalFlySpeedForward = ninjaCalls.flySpeed;
-                    float finalFlySpeedRight = ninjaCalls.flySpeed;
+                    float finalFlySpeedForward = 1f;
+                    float finalFlySpeedRight = 1f;
+
+                    if (ninjaCalls.fly)
+                    {
+                        finalFlySpeedForward = ninjaCalls.flySpeed;
+                        finalFlySpeedRight = ninjaCalls.flySpeed;
+                    } 
+                    else
+                    {
+                        finalFlySpeedForward = ninjaCalls.noclipSpeed;
+                        finalFlySpeedRight = ninjaCalls.noclipSpeed;
+                    }
 
                     if (UnityEngine.Input.GetAxis("Vertical") > deadzone) { finalFlySpeedForward = finalFlySpeedForward * UnityEngine.Input.GetAxis("Vertical"); }
                     else if (UnityEngine.Input.GetAxis("Vertical") < -deadzone) { finalFlySpeedForward = finalFlySpeedForward * (UnityEngine.Input.GetAxis("Vertical") * -1); }
@@ -301,6 +232,15 @@ namespace NinjaUtils
                         velocity += right;
                     }
 
+                    if (ninjaCalls.fly)
+                    {
+                        velocity = velocity.normalized * ninjaCalls.flySpeed;
+                    } 
+                    else
+                    {
+                        velocity = velocity.normalized * ninjaCalls.noclipSpeed;
+                    }
+
                     if (UnityEngine.Input.GetKey(KeyCode.Space) || UnityEngine.Input.GetKey(KeyCode.JoystickButton0))
                     {
                         if (ninjaCalls.player.IsGrounded())
@@ -316,7 +256,7 @@ namespace NinjaUtils
                     }
                     else
                     {
-                        velocity.y = 0.24f;
+                        velocity.y = 0.00f;
                     }
 
                     ninjaCalls.player.SetVelocity(velocity);
@@ -324,19 +264,20 @@ namespace NinjaUtils
                 else
                 {
                     ninjaCalls.fly = false;
+                    ninjaCalls.noclip = false;
                 }
             }
             else
             {
                 if (!ninjaCalls.flyOff && ninjaCalls.player != null)
                 {
-                    if (!ninjaCalls.noclip)
-                    {
-                        Camera.main.farClipPlane = 1000f;
-                        FieldInfo userInputEnabled = typeof(Player).GetField("userInputEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
-                        userInputEnabled.SetValue(ninjaCalls.player, true);
-                        ninjaCalls.player.CompletelyStop();
-                    }
+                    if (Camera.main != null) { Camera.main.farClipPlane = 1000f; }
+                    FieldInfo userInputEnabled = typeof(Player).GetField("userInputEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
+                    userInputEnabled.SetValue(ninjaCalls.player, true);
+
+                    ninjaCalls.player.interactionCollider.enabled = true;
+                    ninjaCalls.player.GetComponent<Collider>().enabled = true;
+
                     ninjaCalls.flyOff = true;
                 }
             }

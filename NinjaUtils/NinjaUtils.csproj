@@ -92,6 +92,7 @@
     <Compile Include="NinjaUpdater.cs" />
     <Compile Include="NinjaUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TriggerTools.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

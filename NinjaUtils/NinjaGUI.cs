@@ -8,17 +8,19 @@ namespace NinjaUtils
 
         private NinjaFunction ninjaFunction;
         private NinjaCalls ninjaCalls;
+        private TriggerTools triggerTools;
 
         public NinjaGUI()
         {
             Instance = this;
             ninjaFunction = NinjaFunction.Instance;
             ninjaCalls = NinjaCalls.Instance;
+            triggerTools = TriggerTools.Instance;
         }
 
         private bool open = true;
 
-        private Rect winRect = new Rect(20, 20, 275, 725);
+        private Rect winRect = new Rect(20, 20, 275, 769);
 
         void OnGUI()
         {
@@ -261,7 +263,7 @@ namespace NinjaUtils
 
 
             linePos = linePos + (elementSizeH * 2);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"Toggle timescale ({(ninjaCalls.timescaleEnabled ? "<color=green>On</color>" : "<color=red>Off</color>")}) (T)") && (ninjaCalls.isMenuing || ninjaCalls.isPaused))
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"Toggle Timescale ({(ninjaCalls.timescaleEnabled ? "<color=green>On</color>" : "<color=red>Off</color>")}) (T)") && (ninjaCalls.isMenuing || ninjaCalls.isPaused))
             {
                 ninjaCalls.timescaleEnabled = !ninjaCalls.timescaleEnabled;
             }
@@ -271,6 +273,12 @@ namespace NinjaUtils
 
             if (!float.TryParse(ninjaCalls.timescaleS, out _)) { ninjaCalls.timescaleS = ninjaCalls.timescale.ToString(); }
             ninjaCalls.timescale = float.Parse(ninjaCalls.timescaleS);
+
+            linePos = linePos + (elementSizeH*2 + lineSpacing);
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), $"Toggle Triggers ({(triggerTools.DisplayTriggerZones ? "<color=green>On</color>" : "<color=red>Off</color>")}) (X)") && (ninjaCalls.isMenuing || ninjaCalls.isPaused))
+            {
+                triggerTools.DisplayTriggerZones = !triggerTools.DisplayTriggerZones;
+            }
         }
 
         void DrawText(float x, float y, float w, float h, string text, GUIStyle textColor, GUIStyle shadowColor = null)
@@ -308,6 +316,7 @@ namespace NinjaUtils
             if (UnityEngine.Input.GetKeyDown(KeyCode.O)) { ninjaFunction.SetStorage(ninjaCalls.GetPlayer(), ninjaCalls.savedStorage); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.T)) { ninjaCalls.timescaleEnabled = !ninjaCalls.timescaleEnabled; }
             if (UnityEngine.Input.GetKeyDown(KeyCode.Quote)) { open = !open; }
+            if (UnityEngine.Input.GetKeyDown(KeyCode.X)) { triggerTools.DisplayTriggerZones = !triggerTools.DisplayTriggerZones; }
         }
     }
 }

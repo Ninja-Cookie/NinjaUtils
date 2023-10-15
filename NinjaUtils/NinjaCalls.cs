@@ -36,7 +36,7 @@ namespace NinjaUtils
         public Vector3 noclipPos = Vector3.zero;
 
         // FLY
-        public float flySpeed = 20f;
+        public float flySpeed = 25f;
         public bool fly = false;
         public bool flyOff = true;
 
