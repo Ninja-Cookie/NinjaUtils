@@ -741,6 +741,7 @@ namespace NinjaUtils
             if (UnityEngine.Input.GetKeyDown(KeyCode.K)) { EndWanted(); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.O)) { SetStorage(player, savedStorage); }
             if (UnityEngine.Input.GetKeyDown(KeyCode.T)) { timescaleEnabled = !timescaleEnabled; }
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Quote)) { open = !open; }
         }
 
         // ---------- FUNCTIONS ----------
