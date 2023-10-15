@@ -548,6 +548,9 @@ namespace NinjaUtils
                     fly = false;
                     flyOff = true;
                     noclipOff = false;
+
+                    Camera.main.farClipPlane = 20000f;
+
                     FieldInfo userInputEnabled = typeof(Player).GetField("userInputEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
                     userInputEnabled.SetValue(player, false);
 
@@ -610,7 +613,6 @@ namespace NinjaUtils
                 else
                 {
                     noclip = false;
-                    noclipOff = true;
                 }
             }
             else
@@ -622,9 +624,13 @@ namespace NinjaUtils
 
                 if (!noclipOff && player != null)
                 {
-                    FieldInfo userInputEnabled = typeof(Player).GetField("userInputEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
-                    userInputEnabled.SetValue(player, true);
-                    player.CompletelyStop();
+                    if (!fly)
+                    {
+                        Camera.main.farClipPlane = 1000f;
+                        FieldInfo userInputEnabled = typeof(Player).GetField("userInputEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
+                        userInputEnabled.SetValue(player, true);
+                        player.CompletelyStop();
+                    }
                     noclipOff = true;
                 }
             }
@@ -636,6 +642,8 @@ namespace NinjaUtils
                     noclip = false;
                     noclipOff = true;
                     flyOff = false;
+
+                    Camera.main.farClipPlane = 20000f;
 
                     FieldInfo userInputEnabled = typeof(Player).GetField("userInputEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
                     userInputEnabled.SetValue(player, false);
@@ -706,16 +714,18 @@ namespace NinjaUtils
                 else
                 {
                     fly = false;
-                    flyOff = true;
                 }
             }
             else
             {
                 if (!flyOff && player != null)
                 {
-                    FieldInfo userInputEnabled = typeof(Player).GetField("userInputEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
-                    userInputEnabled.SetValue(player, true);
-                    player.CompletelyStop();
+                    if (!noclip) {
+                        Camera.main.farClipPlane = 1000f;
+                        FieldInfo userInputEnabled = typeof(Player).GetField("userInputEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
+                        userInputEnabled.SetValue(player, true);
+                        player.CompletelyStop();
+                    }
                     flyOff = true;
                 }
             }
