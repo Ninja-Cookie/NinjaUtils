@@ -86,6 +86,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NinjaCalls.cs" />
+    <Compile Include="NinjaFunction.cs" />
+    <Compile Include="NinjaGUI.cs" />
+    <Compile Include="NinjaUpdater.cs" />
     <Compile Include="NinjaUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
