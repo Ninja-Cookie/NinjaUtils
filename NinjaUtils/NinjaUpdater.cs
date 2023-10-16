@@ -58,8 +58,10 @@ namespace NinjaUtils
                 }
                 if ((MoveStyle)typeof(Player).GetField("moveStyle", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ninjaCalls.player) != ninjaCalls.currentStyleIndex && (MoveStyle)typeof(Player).GetField("moveStyle", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ninjaCalls.player) != MoveStyle.ON_FOOT)
                 {
-                    ninjaCalls.player.SetCurrentMoveStyleEquipped(ninjaCalls.currentStyleIndex, true, true);
-                    ninjaCalls.player.SwitchToEquippedMovestyle(true);
+                    //ninjaCalls.player.SetCurrentMoveStyleEquipped(ninjaCalls.currentStyleIndex, true, true);
+                    //ninjaCalls.player.SwitchToEquippedMovestyle(true);
+                    ninjaCalls.currentStyleIndex = (MoveStyle)typeof(Player).GetField("moveStyle", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ninjaCalls.player);
+                    ninjaCalls.currentStyle = (int)ninjaCalls.currentStyleIndex;
                 }
                 ninjaCalls.wallrunLineAbility = (WallrunLineAbility)typeof(Player).GetField("wallrunAbility", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ninjaCalls.player);
 

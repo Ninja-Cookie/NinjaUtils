@@ -59,13 +59,13 @@ namespace NinjaUtils
             DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, $"Core ({(ninjaCalls.corePuased ? "<color=red>Paused</color>" : "<color=green>Running</color>")})", colorWhite);
 
             linePos = linePos + (elementSizeH + lineSpacing);
-            DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "Speed: " + (int)ninjaCalls.playerSpeed, colorWhite, colorBlack);
+            DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "Speed: " + ninjaCalls.playerSpeed.ToString("0.00"), colorWhite, colorBlack);
 
             linePos = linePos + (elementSizeH / 2) + 2;
-            DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "Highest Speed: " + (int)ninjaCalls.playerSpeedMax, colorWhite, colorBlack);
+            DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "Highest Speed: " + ninjaCalls.playerSpeedMax.ToString("0.00"), colorWhite, colorBlack);
 
             linePos = linePos + (elementSizeH / 2) + 2;
-            DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "Storage Speed: " + (int)ninjaCalls.storageSpeed, colorWhite, colorBlack);
+            DrawText(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH, "Storage Speed: " + ninjaCalls.storageSpeed.ToString("0.00"), colorWhite, colorBlack);
 
             linePos = linePos + (elementSizeH + lineSpacing);
             if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), "Fill Boost (R)") && (ninjaCalls.isMenuing || ninjaCalls.isPaused))
@@ -240,12 +240,12 @@ namespace NinjaUtils
             linePos = linePos + (elementSizeH);
             if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding / buttonSpacing) - (winRect.width / 2), elementSizeH), "Prev Outfit (,)") && (ninjaCalls.isMenuing || ninjaCalls.isPaused))
             {
-                ninjaFunction.NextStyle(ninjaCalls.GetPlayer(), false);
+                ninjaFunction.NextOutfit(ninjaCalls.GetPlayer(), false);
             }
 
             if (GUI.Button(new Rect((winRect.width / 2) + (sidePadding / buttonSpacing), linePos, winRect.width - (sidePadding * buttonSpacing) - (winRect.width / 2), elementSizeH), "Next Outfit (.)") && (ninjaCalls.isMenuing || ninjaCalls.isPaused))
             {
-                ninjaFunction.NextStyle(ninjaCalls.GetPlayer(), true);
+                ninjaFunction.NextOutfit(ninjaCalls.GetPlayer(), true);
             }
 
             linePos = linePos + (elementSizeH * 2);
