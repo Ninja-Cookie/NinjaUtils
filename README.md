@@ -1,6 +1,7 @@
 # NinjaUtils
 
-A heavily inspired take on [SpeedUtils](https://github.com/realJomoko/SpeedUtils/), with most of the same features, minus showing triggers, updated and made a little better.
+A heavily inspired take on [SpeedUtils](https://github.com/realJomoko/SpeedUtils/), with all the same features + extra, done from scratch in my own way with mild reference to it.
+TriggerTools.cs is taken directly from [SpeedUtils](https://github.com/realJomoko/SpeedUtils/) (Not including some edits), all credit goes to that and its creator(s).
 
 ![image](https://github.com/Ninja-Cookie/NinjaUtils/assets/62808028/6de919cf-e9e5-4209-a220-d105a8f02031)
 
@@ -14,10 +15,6 @@ New things include:
 - Teleport hopping between dream spawns.
 - Ability to apply dynamic FPS values to lock at.
 - Mouse Toggle.
-
-This was created from scratch, with mild reference to [SpeedUtils](https://github.com/realJomoko/SpeedUtils/) on how some things are done, so the code and structure aint as pretty, but it works.
-
-TriggerTools.cs is taken directly from [SpeedUtils](https://github.com/realJomoko/SpeedUtils/) (Not including some edits), all credit goes to that and its creator(s).
 
 # Installation
 - Download [BepInEx](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.21) and extract it to your Bomb Rush Cyberfunk install directory.
