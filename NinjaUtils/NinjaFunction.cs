@@ -192,13 +192,16 @@ namespace NinjaUtils
             }
         }
 
-        public void NextStyle(Player player, bool nextStyle = true)
+        public void NextStyle(Player player, bool nextStyle = true, bool updateStyle = false)
         {
             if (player != null)
             {
-                if (nextStyle) { ninjaCalls.currentStyle++; } else { ninjaCalls.currentStyle--; }
-                if (ninjaCalls.currentStyle > (int)MoveStyle.MAX - 1) { ninjaCalls.currentStyle = 1; }
-                else if (ninjaCalls.currentStyle < 1) { ninjaCalls.currentStyle = (int)MoveStyle.MAX - 1; }
+                if (!updateStyle)
+                {
+                    if (nextStyle) { ninjaCalls.currentStyle++; } else { ninjaCalls.currentStyle--; }
+                    if (ninjaCalls.currentStyle > (int)MoveStyle.MAX - 1) { ninjaCalls.currentStyle = 1; }
+                    else if (ninjaCalls.currentStyle < 1) { ninjaCalls.currentStyle = (int)MoveStyle.MAX - 1; }
+                }
 
                 bool shouldChange = false;
                 if ((MoveStyle)typeof(Player).GetField("moveStyle", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(player) != MoveStyle.ON_FOOT) { shouldChange = true; }
@@ -206,6 +209,9 @@ namespace NinjaUtils
                 player.SetCurrentMoveStyleEquipped((MoveStyle)ninjaCalls.currentStyle, true, true);
                 if (shouldChange) { player.SwitchToEquippedMovestyle(true); }
                 ninjaCalls.currentStyleIndex = (MoveStyle)ninjaCalls.currentStyle;
+
+                Core.Instance.SaveManager.CurrentSaveSlot.GetCharacterProgress(ninjaCalls.currentCharIndex).moveStyle = (MoveStyle)ninjaCalls.currentStyle;
+                Core.Instance.SaveManager.SaveCurrentSaveSlot();
             }
         }
 

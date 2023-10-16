@@ -56,12 +56,17 @@ namespace NinjaUtils
                     ninjaCalls.currentCharIndex = (Characters)typeof(Player).GetField("character", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ninjaCalls.player);
                     ninjaCalls.currentChar = (int)ninjaCalls.currentCharIndex;
                 }
-                if ((MoveStyle)typeof(Player).GetField("moveStyle", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ninjaCalls.player) != ninjaCalls.currentStyleIndex && (MoveStyle)typeof(Player).GetField("moveStyle", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ninjaCalls.player) != MoveStyle.ON_FOOT)
+                if (Core.Instance.SaveManager.CurrentSaveSlot.GetCharacterProgress(ninjaCalls.currentCharIndex).moveStyle != ninjaCalls.currentStyleIndex)
                 {
-                    //ninjaCalls.player.SetCurrentMoveStyleEquipped(ninjaCalls.currentStyleIndex, true, true);
-                    //ninjaCalls.player.SwitchToEquippedMovestyle(true);
-                    ninjaCalls.currentStyleIndex = (MoveStyle)typeof(Player).GetField("moveStyle", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ninjaCalls.player);
+                    if (Core.Instance.SaveManager.CurrentSaveSlot.GetCharacterProgress(ninjaCalls.currentCharIndex).moveStyle == MoveStyle.ON_FOOT)
+                    {
+                        Core.Instance.SaveManager.CurrentSaveSlot.GetCharacterProgress(ninjaCalls.currentCharIndex).moveStyle = MoveStyle.SKATEBOARD;
+                    }
+
+                    ninjaCalls.currentStyleIndex = Core.Instance.SaveManager.CurrentSaveSlot.GetCharacterProgress(ninjaCalls.currentCharIndex).moveStyle;
+
                     ninjaCalls.currentStyle = (int)ninjaCalls.currentStyleIndex;
+                    ninjaFunction.NextStyle(ninjaCalls.player, false, true);
                 }
                 ninjaCalls.wallrunLineAbility = (WallrunLineAbility)typeof(Player).GetField("wallrunAbility", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ninjaCalls.player);
 
