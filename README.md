@@ -17,7 +17,7 @@ New things include:
 - Mouse Toggle.
 
 # Installation
-- Download [BepInEx](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.21) and extract it to your Bomb Rush Cyberfunk install directory.
+- Download [BepInEx](https://github.com/BepInEx/BepInEx/releases/) and extract it to your Bomb Rush Cyberfunk install directory.
 - Open Bomb Rush Cyberfunk so BepInEx will run its setup, then close the game once you're at the main menu.
 - Download NinjaUtils.dll from [Releases](https://github.com/Ninja-Cookie/NinjaUtils/releases) and place it into the "[Bomb Rush Cyberfunk Install Dir]\BepInEx\plugins" folder.
 - Press ' (single quote) (or # (hashtag) depending on keyboard) in-game to toggle the menu.
