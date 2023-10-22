@@ -1,7 +1,9 @@
 ﻿using Reptile;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace NinjaUtils
 {
@@ -258,6 +260,22 @@ namespace NinjaUtils
                 FieldInfo lastSpeed = typeof(WallrunLineAbility).GetField("lastSpeed", BindingFlags.Instance | BindingFlags.NonPublic);
                 lastSpeed.SetValue(ninjaCalls.wallrunLineAbility, storage);
             }
+        }
+
+        public void VisualizeZip() 
+        {
+            foreach (WallrunLine wallrunLine in Resources.FindObjectsOfTypeAll(typeof(WallrunLine)))
+            {
+                GameObject collisionCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                collisionCube.GetComponent<Collider>().enabled = false;
+                collisionCube.transform.position = wallrunLine.transform.TransformPoint(new Vector3(0.49f, 0.5f, 1));
+                collisionCube.transform.rotation = wallrunLine.transform.rotation;
+                collisionCube.transform.localScale = new Vector3((wallrunLine.transform.localScale.x/40), 0.2f, wallrunLine.transform.localScale.z);
+            }
+        }
+
+        public void HighlightWalls() 
+        {
         }
     }
 }

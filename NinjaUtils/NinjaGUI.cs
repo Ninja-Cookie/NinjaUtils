@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿using Reptile;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using UnityEngine;
 
 namespace NinjaUtils
 {
@@ -131,7 +136,7 @@ namespace NinjaUtils
             ninjaCalls.savedStorage = float.Parse(ninjaCalls.savedStorageS);
 
             linePos = linePos + (elementSizeH + lineSpacing);
-            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), "Set Storage Speed (O)") && ninjaCalls.isMenuing || ninjaCalls.isPaused)
+            if (GUI.Button(new Rect(sidePadding, linePos, winRect.width - (sidePadding * 2), elementSizeH), "Set Storage Speed (O)") && (ninjaCalls.isMenuing || ninjaCalls.isPaused))
             {
                 ninjaFunction.SetStorage(ninjaCalls.GetPlayer(), ninjaCalls.savedStorage);
             }
@@ -317,6 +322,9 @@ namespace NinjaUtils
             if (UnityEngine.Input.GetKeyDown(KeyCode.T)) { ninjaCalls.timescaleEnabled = !ninjaCalls.timescaleEnabled; }
             if (UnityEngine.Input.GetKeyDown(KeyCode.Quote)) { open = !open; }
             if (UnityEngine.Input.GetKeyDown(KeyCode.X)) { triggerTools.DisplayTriggerZones = !triggerTools.DisplayTriggerZones; }
+
+            //if (UnityEngine.Input.GetKeyDown(KeyCode.V)) { ninjaFunction.VisualizeZip(); }
+            //if (UnityEngine.Input.GetKeyDown(KeyCode.B)) { ninjaFunction.HighlightWalls(); }
         }
     }
 }
