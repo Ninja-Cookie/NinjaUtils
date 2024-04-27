@@ -1,3 +1,5 @@
+# OUTDATED: PLEASE USE [BRCTools](https://github.com/Ninja-Cookie/BRCTools/) INSTEAD
+
 # NinjaUtils
 
 A heavily inspired take on [SpeedUtils](https://github.com/realJomoko/SpeedUtils/), with all the same features + extra, done from scratch in my own way with mild reference to it.
